@@ -12,15 +12,3 @@ spring:
     show-sql: 'true'
     hibernate:
       ddl-auto: create-drop
-
-#cloud:
-#  aws:
-#    stack:
-#      auto: false
-#    region:
-#      static: us-east-1
-#    credentials:
-#      access-key: ANUJDEKAVADIYAEXAMPLE
-#      secret-key: 2QvM4/Tdmf38SkcD/qalvXO4EXAMPLEKEY
-#    end-point:
-#      uri: http://localhost:4566

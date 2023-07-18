@@ -1,4 +1,4 @@
-package com.example.localstack.emitter;
+package com.example.localstack.event.emitter;
 
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.services.sqs.SqsClient;
