@@ -1,5 +1,5 @@
 package com.example.localstack.event.emitter;
 
-public interface EventEmitter {
-    void emit(String message);
+public interface EventEmitter<T> {
+    void emit(T message);
 }
