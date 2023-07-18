@@ -1,7 +1,6 @@
 package com.example.localstack.data.schema;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.*;
 
@@ -12,11 +11,11 @@ import lombok.*;
 @Getter
 @Setter
 public class CEPInfo {
-    @Id
-    @GeneratedValue
-    private Long id;
 
+    @Id
     private String cep;
+
+    private String cepFormatado;
 
     private String logradouro;
 
@@ -35,4 +34,8 @@ public class CEPInfo {
     private String ddd;
 
     private String siafi;
+
+    public CEPInfo(String cep) {
+        this.cep = cep;
+    }
 }

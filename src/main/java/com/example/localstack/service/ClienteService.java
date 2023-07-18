@@ -13,7 +13,11 @@ public class ClienteService {
         this.clienteRepository = clienteRepository;
     }
 
-    public void salvar(Cliente cliente) {
-        clienteRepository.save(cliente);
+    public Cliente salvar(Cliente cliente) {
+        return clienteRepository.save(cliente);
+    }
+
+    public Cliente buscarPorId(Long id) {
+        return clienteRepository.findById(id).orElseThrow();
     }
 }

@@ -18,4 +18,7 @@ public class ContratacaoRequest {
 
     @Size(min = 8, max = 8)
     private String cep;
+
+    @Size(min = 11, max = 11)
+    private String cpf;
 }

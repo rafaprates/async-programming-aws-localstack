@@ -19,11 +19,17 @@ public class Cliente {
 
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cep_id")
     private CEPInfo cepInfo;
 
-    public Cliente(String name, CEPInfo cepInfo) {
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cpf_id")
+    private CPFInfo cpfInfo;
+
+    public Cliente(String name, CEPInfo cepInfo, CPFInfo cpfInfo) {
         this.name = name;
         this.cepInfo = cepInfo;
+        this.cpfInfo = cpfInfo;
     }
 }
