@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    username: sa
+    url: jdbc:h2:mem:testdb
+    password: ''
+  h2:
+    console:
+      enabled: 'true'
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: 'true'
+    hibernate:
+      ddl-auto: create-drop
+
+#cloud:
+#  aws:
+#    stack:
+#      auto: false
+#    region:
+#      static: us-east-1
+#    credentials:
+#      access-key: ANUJDEKAVADIYAEXAMPLE
+#      secret-key: 2QvM4/Tdmf38SkcD/qalvXO4EXAMPLEKEY
+#    end-point:
+#      uri: http://localhost:4566
