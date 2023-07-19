@@ -2,7 +2,6 @@ package com.example.localstack.event.worker;
 
 import com.example.localstack.event.dto.ContratacaoMessage;
 import com.example.localstack.event.dto.SnsTopicMessage;
-import com.example.localstack.service.ContratacaoService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,6 @@ import java.util.List;
 public class ConsultaCpfWorker implements Worker<ContratacaoMessage> {
 
     private final SqsClient sqsClient;
-    private final ContratacaoService contratacaoService;
 
     @Scheduled(fixedDelay = 5000)
     public void listen() {
