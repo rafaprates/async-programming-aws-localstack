@@ -12,14 +12,14 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class CPFInfo {
+public class CPF {
 
     @Id
     private String cpf;
 
     private boolean isValido;
 
-    public CPFInfo(String cpf) {
+    public CPF(String cpf) {
         this.cpf = cpf;
     }
 }

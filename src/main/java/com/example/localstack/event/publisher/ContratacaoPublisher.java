@@ -1,4 +1,4 @@
-package com.example.localstack.event.emitter;
+package com.example.localstack.event.publisher;
 
 import com.example.localstack.event.dto.ContratacaoMessage;
 import com.fasterxml.jackson.core.JsonProcessingException;

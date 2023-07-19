@@ -1,4 +1,4 @@
-package com.example.localstack.controller.response;
+package com.example.localstack.service.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

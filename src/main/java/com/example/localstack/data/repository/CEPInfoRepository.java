@@ -1,7 +1,7 @@
 package com.example.localstack.data.repository;
 
-import com.example.localstack.data.schema.CEPInfo;
+import com.example.localstack.data.schema.CEP;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CEPInfoRepository extends JpaRepository<CEPInfo, Long> {
+public interface CEPInfoRepository extends JpaRepository<CEP, Long> {
 }

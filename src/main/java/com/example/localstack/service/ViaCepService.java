@@ -1,6 +1,6 @@
 package com.example.localstack.service;
 
-import com.example.localstack.controller.response.ViaCepResponse;
+import com.example.localstack.service.dto.ViaCepResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

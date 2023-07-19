@@ -19,7 +19,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class ConsultaCpfWorker {
+public class ConsultaCpfWorker implements Worker<ContratacaoMessage> {
 
     private final SqsClient sqsClient;
     private final ContratacaoService contratacaoService;
@@ -39,7 +39,7 @@ public class ConsultaCpfWorker {
                         try {
                             SnsTopicMessage m = mapper.readValue(body, SnsTopicMessage.class);
                             ContratacaoMessage contratacaoMessage = mapper.readValue(m.getMessage(), ContratacaoMessage.class);
-                            contratacaoService.processarCpf(contratacaoMessage);
+                            process(contratacaoMessage);
                         } catch (JsonProcessingException e) {
                             throw new RuntimeException(e);
                         }
@@ -47,6 +47,11 @@ public class ConsultaCpfWorker {
 
             deleteMessage(message.receiptHandle());
         }
+    }
+
+    @Override
+    public void process(ContratacaoMessage message) {
+        log.info("Processar CPF para cliente {}", message.getIdCliente());
     }
 
     private void deleteMessage(String receiptHandle) {

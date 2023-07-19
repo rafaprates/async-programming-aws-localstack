@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
-public class CEPInfo {
+public class CEP {
 
     @Id
     private String cep;
@@ -35,7 +35,7 @@ public class CEPInfo {
 
     private String siafi;
 
-    public CEPInfo(String cep) {
+    public CEP(String cep) {
         this.cep = cep;
     }
 }

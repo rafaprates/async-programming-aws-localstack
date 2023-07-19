@@ -21,15 +21,15 @@ public class Cliente {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cep_id")
-    private CEPInfo cepInfo;
+    private CEP cep;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cpf_id")
-    private CPFInfo cpfInfo;
+    private CPF cpf;
 
-    public Cliente(String name, CEPInfo cepInfo, CPFInfo cpfInfo) {
+    public Cliente(String name, CEP cep, CPF cpf) {
         this.name = name;
-        this.cepInfo = cepInfo;
-        this.cpfInfo = cpfInfo;
+        this.cep = cep;
+        this.cpf = cpf;
     }
 }
