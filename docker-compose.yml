@@ -2,11 +2,11 @@ version: "3.8"
 
 services:
   localstack:
-    container_name: "${LOCALSTACK_DOCKER_NAME-localstack_main}"
+    container_name: "localstack"
     image: localstack/localstack
     ports:
       - "127.0.0.1:4566:4566"            # LocalStack Gateway
-      - "127.0.0.1:4510-4559:4510-4559"  # external services port range
+#      - "127.0.0.1:4510-4559:4510-4559"  # external services port range
     environment:
       - DEBUG=1
       - DOCKER_HOST=unix:///var/run/docker.sock
@@ -14,6 +14,13 @@ services:
       - AWS_ACCESS_KEY_ID="FAKE"
       - AWS_DEFAULT_REGION=us-east-1
     volumes:
-      - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
-      - "/var/run/docker.sock:/var/run/docker.sock"
+#      - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
+#      - "/var/run/docker.sock:/var/run/docker.sock"
       - "./aws-init.sh:/etc/localstack/init/ready.d/aws-init.sh"
+
+  redis:
+    container_name: "redis"
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
