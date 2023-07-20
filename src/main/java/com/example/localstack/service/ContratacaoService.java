@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class ContratacaoService {
 
-    private final ViaCepService viaCepService;
     private final ClienteService clienteService;
     private final Publisher<ContratacaoMessage> contratacaoPublisher;
 
@@ -28,32 +27,4 @@ public class ContratacaoService {
 
         contratacaoPublisher.publish(new ContratacaoMessage(salvar.getId()));
     }
-
-//    public void processarCep(ContratacaoMessage message) {
-//        log.info("Processar CEP para cliente {}", message.getIdCliente());
-//        Cliente cliente = clienteService.buscarPorId(message.getIdCliente());
-//
-//        ViaCepResponse response = viaCepService.consultar(cliente.getCep().getCep());
-//
-//        CEP cep = CEP.builder()
-//                .cep(cliente.getCep().getCep())
-//                .cepFormatado(response.getCep())
-//                .logradouro(response.getLogradouro())
-//                .bairro(response.getBairro())
-//                .localidade(response.getLocalidade())
-//                .uf(response.getUf())
-//                .ibge(response.getIbge())
-//                .gia(response.getGia())
-//                .ddd(response.getDdd())
-//                .siafi(response.getSiafi())
-//                .build();
-//
-//        cliente.setCep(cep);
-//
-//        clienteService.salvar(cliente);
-//    }
-//
-//    public void processarCpf(ContratacaoMessage message) {
-//        log.info("Processar CPF para cliente {}", message.getIdCliente());
-//    }
 }
