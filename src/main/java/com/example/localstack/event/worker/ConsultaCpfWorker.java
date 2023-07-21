@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.sqs.SqsClient;
@@ -22,13 +23,15 @@ import java.util.List;
 @Service
 public class ConsultaCpfWorker implements Worker<ContratacaoMessage> {
 
+    @Value("${env.aws.sqs.queue.consulta-cpf-queue}")
+    private String queueUrl;
     private final SqsClient sqsClient;
     private final CPFRepository cpfRepository;
 
     @Scheduled(fixedDelay = 5000)
     public void listen() {
         ReceiveMessageRequest receiveRequest = ReceiveMessageRequest.builder()
-                .queueUrl("http://localhost:4566/000000000000/consulta-cpf-queue")
+                .queueUrl(queueUrl)
                 .build();
         List<Message> messages = sqsClient.receiveMessage(receiveRequest).messages();
 
@@ -58,7 +61,7 @@ public class ConsultaCpfWorker implements Worker<ContratacaoMessage> {
 
     private void deleteMessage(String receiptHandle) {
         DeleteMessageRequest deleteMessageRequest = DeleteMessageRequest.builder()
-                .queueUrl("http://localhost:4566/000000000000/consulta-cpf-queue")
+                .queueUrl(queueUrl)
                 .receiptHandle(receiptHandle)
                 .build();
         sqsClient.deleteMessage(deleteMessageRequest);

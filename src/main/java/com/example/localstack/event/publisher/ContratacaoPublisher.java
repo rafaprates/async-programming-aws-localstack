@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.services.sns.SnsClient;
 import software.amazon.awssdk.services.sns.model.PublishRequest;
@@ -16,6 +17,8 @@ import software.amazon.awssdk.services.sns.model.SnsException;
 @Component
 public class ContratacaoPublisher implements Publisher<ContratacaoMessage> {
 
+    @Value("${env.aws.sns.topic.contratacao}")
+    private String topicArn;
     private final SnsClient snsClient;
 
     @Override
@@ -25,7 +28,7 @@ public class ContratacaoPublisher implements Publisher<ContratacaoMessage> {
         try {
             PublishRequest request = PublishRequest.builder()
                     .message(json)
-                    .topicArn("arn:aws:sns:us-east-1:000000000000:contratacao")
+                    .topicArn(topicArn)
                     .build();
 
             PublishResponse result = snsClient.publish(request);

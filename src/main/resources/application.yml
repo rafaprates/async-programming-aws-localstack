@@ -15,6 +15,16 @@ spring:
   cache:
     type: redis
 
+env:
+  aws:
+    sqs:
+      queue:
+        consulta-cpf-queue: "http://localhost:4566/000000000000/consulta-cpf-queue"
+        consulta-cep-queue: "http://localhost:4566/000000000000/consulta-cep-queue"
+    sns:
+        topic:
+            contratacao: "arn:aws:sns:us-east-1:000000000000:contratacao"
+
 logging:
   level:
     org.springframework.cache: TRACE
