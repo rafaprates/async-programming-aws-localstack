@@ -3,6 +3,7 @@ package com.example.localstack.service;
 import com.example.localstack.controller.request.ContratacaoRequest;
 import com.example.localstack.data.repository.CEPRepository;
 import com.example.localstack.data.repository.CPFRepository;
+import com.example.localstack.data.repository.ClienteRepository;
 import com.example.localstack.data.schema.CEP;
 import com.example.localstack.data.schema.CPF;
 import com.example.localstack.data.schema.Cliente;
@@ -17,8 +18,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ContratacaoService {
 
-    private final ClienteService clienteService;
     private final Publisher<ContratacaoMessage> contratacaoPublisher;
+    private final ClienteRepository clienteRepository;
     private final CEPRepository cepRepository;
     private final CPFRepository cpfRepository;
 
@@ -27,7 +28,7 @@ public class ContratacaoService {
 
         CEP cep = cepRepository.save(new CEP(input.cep()));
         CPF cpf = cpfRepository.save(new CPF(input.cpf()));
-        Cliente cliente = clienteService.salvar(new Cliente(clientName, cep, cpf));
+        Cliente cliente = clienteRepository.save(new Cliente(clientName, cep, cpf));
 
         contratacaoPublisher.publish(
                 new ContratacaoMessage(cliente.getId(), input.cpf(), input.cep())

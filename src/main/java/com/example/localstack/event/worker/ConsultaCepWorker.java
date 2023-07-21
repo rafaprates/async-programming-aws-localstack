@@ -3,13 +3,13 @@ package com.example.localstack.event.worker;
 import com.example.localstack.data.repository.CEPRepository;
 import com.example.localstack.event.dto.ContratacaoMessage;
 import com.example.localstack.event.dto.SnsTopicMessage;
-import com.example.localstack.service.ClienteService;
 import com.example.localstack.service.ViaCepService;
 import com.example.localstack.service.dto.ViaCepResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.sqs.SqsClient;
@@ -24,8 +24,9 @@ import java.util.List;
 @Service
 public class ConsultaCepWorker implements Worker<ContratacaoMessage> {
 
+    @Value("${env.aws.sqs.queue.consulta-cep-queue}")
+    private String queueUrl;
     private final SqsClient sqsClient;
-    private final ClienteService clienteService;
     private final ViaCepService viaCepService;
     private final CEPRepository cepRepository;
 
@@ -33,7 +34,7 @@ public class ConsultaCepWorker implements Worker<ContratacaoMessage> {
     @Scheduled(fixedDelay = 5000)
     public void listen() {
         ReceiveMessageRequest receiveRequest = ReceiveMessageRequest.builder()
-                .queueUrl("http://localhost:4566/000000000000/consulta-cep-queue")
+                .queueUrl(queueUrl)
                 .build();
         List<Message> messages = sqsClient.receiveMessage(receiveRequest).messages();
 
@@ -81,7 +82,7 @@ public class ConsultaCepWorker implements Worker<ContratacaoMessage> {
 
     private void deleteMessage(String receiptHandle) {
         DeleteMessageRequest deleteMessageRequest = DeleteMessageRequest.builder()
-                .queueUrl("http://localhost:4566/000000000000/consulta-cep-queue")
+                .queueUrl(queueUrl)
                 .receiptHandle(receiptHandle)
                 .build();
         sqsClient.deleteMessage(deleteMessageRequest);
