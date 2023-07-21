@@ -1,7 +1,6 @@
 package com.example.localstack.event.worker;
 
-import com.example.localstack.data.schema.CEP;
-import com.example.localstack.data.schema.Cliente;
+import com.example.localstack.data.repository.CEPRepository;
 import com.example.localstack.event.dto.ContratacaoMessage;
 import com.example.localstack.event.dto.SnsTopicMessage;
 import com.example.localstack.service.ClienteService;
@@ -28,6 +27,7 @@ public class ConsultaCepWorker implements Worker<ContratacaoMessage> {
     private final SqsClient sqsClient;
     private final ClienteService clienteService;
     private final ViaCepService viaCepService;
+    private final CEPRepository cepRepository;
 
     @Override
     @Scheduled(fixedDelay = 5000)
@@ -57,27 +57,26 @@ public class ConsultaCepWorker implements Worker<ContratacaoMessage> {
 
     @Override
     public void process(ContratacaoMessage message) {
-        log.info("Processar CEP para cliente {}", message.getIdCliente());
-        Cliente cliente = clienteService.buscarPorId(message.getIdCliente());
+        log.info("Processar CEP {}", message.cep());
 
-        ViaCepResponse response = viaCepService.consultar(cliente.getCep().getCep());
+        ViaCepResponse response = viaCepService.consultar(message.cep());
 
-        CEP cep = CEP.builder()
-                .cep(cliente.getCep().getCep())
-                .cepFormatado(response.getCep())
-                .logradouro(response.getLogradouro())
-                .bairro(response.getBairro())
-                .localidade(response.getLocalidade())
-                .uf(response.getUf())
-                .ibge(response.getIbge())
-                .gia(response.getGia())
-                .ddd(response.getDdd())
-                .siafi(response.getSiafi())
-                .build();
-
-        cliente.setCep(cep);
-
-        clienteService.salvar(cliente);
+       cepRepository.findById(message.cep()).ifPresent(
+                cep -> {
+                    cep.update(
+                            response.getLogradouro(),
+                            response.getComplemento(),
+                            response.getBairro(),
+                            response.getLocalidade(),
+                            response.getUf(),
+                            response.getIbge(),
+                            response.getGia(),
+                            response.getDdd(),
+                            response.getSiafi()
+                    );
+                    cepRepository.save(cep);
+                }
+       );
     }
 
     private void deleteMessage(String receiptHandle) {

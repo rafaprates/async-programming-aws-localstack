@@ -1,7 +1,10 @@
 package com.example.localstack.event.worker;
 
+import com.example.localstack.data.repository.CPFRepository;
+import com.example.localstack.data.schema.CPF;
 import com.example.localstack.event.dto.ContratacaoMessage;
 import com.example.localstack.event.dto.SnsTopicMessage;
+import com.example.localstack.service.ClienteService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +24,8 @@ import java.util.List;
 public class ConsultaCpfWorker implements Worker<ContratacaoMessage> {
 
     private final SqsClient sqsClient;
+    private final ClienteService clienteService;
+    private final CPFRepository cpfRepository;
 
     @Scheduled(fixedDelay = 5000)
     public void listen() {
@@ -49,7 +54,8 @@ public class ConsultaCpfWorker implements Worker<ContratacaoMessage> {
 
     @Override
     public void process(ContratacaoMessage message) {
-        log.info("Processar CPF para cliente {}", message.getIdCliente());
+        log.info("Processar CPF {}", message.cpf());
+        cpfRepository.save(new CPF(message.cpf()));
     }
 
     private void deleteMessage(String receiptHandle) {

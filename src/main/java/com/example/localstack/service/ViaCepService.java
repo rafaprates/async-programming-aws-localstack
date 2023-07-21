@@ -13,9 +13,11 @@ public class ViaCepService {
 
     @Cacheable("viaCep")
     public ViaCepResponse consultar(String cep) {
+        long start = System.currentTimeMillis();
         RestTemplate restTemplate = new RestTemplate();
         String viaCepUrl = "https://viacep.com.br/ws/" + cep + "/json/";
         ResponseEntity<ViaCepResponse> response = restTemplate.getForEntity(viaCepUrl, ViaCepResponse.class);
+        log.info("Tempo de resposta da consulta ao ViaCep: {} ms", System.currentTimeMillis() - start);
         return response.getBody();
     }
 }
