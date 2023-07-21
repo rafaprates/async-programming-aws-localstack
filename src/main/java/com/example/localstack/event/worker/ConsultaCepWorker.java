@@ -3,7 +3,6 @@ package com.example.localstack.event.worker;
 import com.example.localstack.data.repository.CEPRepository;
 import com.example.localstack.event.dto.ContratacaoMessage;
 import com.example.localstack.event.dto.SnsTopicMessage;
-import com.example.localstack.service.ClienteService;
 import com.example.localstack.service.ViaCepService;
 import com.example.localstack.service.dto.ViaCepResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -25,7 +24,6 @@ import java.util.List;
 public class ConsultaCepWorker implements Worker<ContratacaoMessage> {
 
     private final SqsClient sqsClient;
-    private final ClienteService clienteService;
     private final ViaCepService viaCepService;
     private final CEPRepository cepRepository;
 
