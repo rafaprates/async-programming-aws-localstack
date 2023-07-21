@@ -14,3 +14,21 @@ SQS is used to receive messages from the topic and process them asynchronously. 
 
 ### Redis Caching
 Redis is used to improve performance of the application and potentially reduce costs. Before going to an external API (ViaCep), the application checks if the CEP has already been processed and cached in Redis. If it has, the application returns the cached result. If not, the application calls the external API and caches the result in Redis. 
+
+## Running the Application
+
+1) Run the following command to start the Docker containers:
+```
+docker compose up -d
+```
+
+2) Run the Java application as is most convenient for you. For example, you can run it from your IDE.
+
+
+## Testing the Application
+1) Issue an HTTP post request to the application using the following command:
+```
+curl -X POST -H "Content-Type: application/json" -d '{"nome": "João da Silva", "cpf": "12345678900", "cep": "12345678"}' http://localhost:8080/api/v1/contratacoes
+```
+2) Observe the logs of the application to see the messages being processed asynchronously and eventually cached.
+3) You can also check the database at http://localhost:8080/h2-console. The username is "sa" and the password is blank.
