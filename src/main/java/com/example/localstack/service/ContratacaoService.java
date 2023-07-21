@@ -23,14 +23,14 @@ public class ContratacaoService {
     private final CPFRepository cpfRepository;
 
     public void processarRequisicao(ContratacaoRequest input) {
-        String clientName = input.getCliente();
+        String clientName = input.cliente();
 
-        CEP cep = cepRepository.save(new CEP(input.getCep()));
-        CPF cpf = cpfRepository.save(new CPF(input.getCpf()));
+        CEP cep = cepRepository.save(new CEP(input.cep()));
+        CPF cpf = cpfRepository.save(new CPF(input.cpf()));
         Cliente cliente = clienteService.salvar(new Cliente(clientName, cep, cpf));
 
         contratacaoPublisher.publish(
-                new ContratacaoMessage(cliente.getId(), input.getCpf(), input.getCep())
+                new ContratacaoMessage(cliente.getId(), input.cpf(), input.cep())
         );
     }
 }

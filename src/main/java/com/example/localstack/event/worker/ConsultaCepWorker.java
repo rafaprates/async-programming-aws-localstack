@@ -44,7 +44,7 @@ public class ConsultaCepWorker implements Worker<ContratacaoMessage> {
                         ObjectMapper mapper = new ObjectMapper();
                         try {
                             SnsTopicMessage m = mapper.readValue(body, SnsTopicMessage.class);
-                            ContratacaoMessage contratacaoMessage = mapper.readValue(m.getMessage(), ContratacaoMessage.class);
+                            ContratacaoMessage contratacaoMessage = mapper.readValue(m.Message(), ContratacaoMessage.class);
                             process(contratacaoMessage);
                         } catch (JsonProcessingException e) {
                             throw new RuntimeException(e);
@@ -64,15 +64,15 @@ public class ConsultaCepWorker implements Worker<ContratacaoMessage> {
        cepRepository.findById(message.cep()).ifPresent(
                 cep -> {
                     cep.update(
-                            response.getLogradouro(),
-                            response.getComplemento(),
-                            response.getBairro(),
-                            response.getLocalidade(),
-                            response.getUf(),
-                            response.getIbge(),
-                            response.getGia(),
-                            response.getDdd(),
-                            response.getSiafi()
+                            response.logradouro(),
+                            response.complemento(),
+                            response.bairro(),
+                            response.localidade(),
+                            response.uf(),
+                            response.ibge(),
+                            response.gia(),
+                            response.ddd(),
+                            response.siafi()
                     );
                     cepRepository.save(cep);
                 }

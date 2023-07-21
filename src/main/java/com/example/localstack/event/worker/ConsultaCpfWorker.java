@@ -4,7 +4,6 @@ import com.example.localstack.data.repository.CPFRepository;
 import com.example.localstack.data.schema.CPF;
 import com.example.localstack.event.dto.ContratacaoMessage;
 import com.example.localstack.event.dto.SnsTopicMessage;
-import com.example.localstack.service.ClienteService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +23,6 @@ import java.util.List;
 public class ConsultaCpfWorker implements Worker<ContratacaoMessage> {
 
     private final SqsClient sqsClient;
-    private final ClienteService clienteService;
     private final CPFRepository cpfRepository;
 
     @Scheduled(fixedDelay = 5000)
@@ -41,7 +39,7 @@ public class ConsultaCpfWorker implements Worker<ContratacaoMessage> {
                         ObjectMapper mapper = new ObjectMapper();
                         try {
                             SnsTopicMessage m = mapper.readValue(body, SnsTopicMessage.class);
-                            ContratacaoMessage contratacaoMessage = mapper.readValue(m.getMessage(), ContratacaoMessage.class);
+                            ContratacaoMessage contratacaoMessage = mapper.readValue(m.Message(), ContratacaoMessage.class);
                             process(contratacaoMessage);
                         } catch (JsonProcessingException e) {
                             throw new RuntimeException(e);

@@ -2,23 +2,16 @@ package com.example.localstack.controller.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@NoArgsConstructor
-@Getter
-@Setter
-@ToString
-public class ContratacaoRequest {
+public record ContratacaoRequest(
+        @NotBlank
+        String cliente,
 
-    @NotBlank
-    private String cliente;
+        @Size(min = 8, max = 8)
+        String cep,
 
-    @Size(min = 8, max = 8)
-    private String cep;
+        @Size(min = 11, max = 11)
+        String cpf
 
-    @Size(min = 11, max = 11)
-    private String cpf;
+) {
 }
