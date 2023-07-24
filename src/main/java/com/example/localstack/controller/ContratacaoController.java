@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import software.amazon.awssdk.services.sns.SnsClient;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -17,7 +16,6 @@ import software.amazon.awssdk.services.sns.SnsClient;
 public class ContratacaoController {
 
     private final ContratacaoService contratacaoService;
-    private final SnsClient snsClient;
 
     @PostMapping("/api/v1/contratacoes")
     public ResponseEntity<Void> contratar(@Valid @RequestBody ContratacaoRequest input) {

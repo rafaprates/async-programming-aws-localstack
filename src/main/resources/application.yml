@@ -15,6 +15,15 @@ spring:
   cache:
     type: redis
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: 'health,metrics,httpexchanges,scheduledtasks'
+  endpoint:
+    health:
+      show-details: always
+
 env:
   aws:
     sqs:
@@ -22,8 +31,8 @@ env:
         consulta-cpf-queue: "http://localhost:4566/000000000000/consulta-cpf-queue"
         consulta-cep-queue: "http://localhost:4566/000000000000/consulta-cep-queue"
     sns:
-        topic:
-            contratacao: "arn:aws:sns:us-east-1:000000000000:contratacao"
+      topic:
+        contratacao: "arn:aws:sns:us-east-1:000000000000:contratacao"
 
 logging:
   level:
