@@ -7,6 +7,8 @@ import com.example.localstack.service.ViaCepService;
 import com.example.localstack.service.dto.ViaCepResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.observation.Observation;
+import io.micrometer.observation.ObservationRegistry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,31 +31,35 @@ public class ConsultaCepWorker implements Worker<ContratacaoMessage> {
     private final SqsClient sqsClient;
     private final ViaCepService viaCepService;
     private final CEPRepository cepRepository;
+    private final ObservationRegistry observationRegistry;
 
     @Override
     @Scheduled(fixedDelay = 5000)
     public void listen() {
-        ReceiveMessageRequest receiveRequest = ReceiveMessageRequest.builder()
-                .queueUrl(queueUrl)
-                .build();
-        List<Message> messages = sqsClient.receiveMessage(receiveRequest).messages();
+        Observation.createNotStarted("Tempo execucao CEPWorker (ms)", observationRegistry)
+                .observe(() -> {
+                    ReceiveMessageRequest receiveRequest = ReceiveMessageRequest.builder()
+                            .queueUrl(queueUrl)
+                            .build();
+                    List<Message> messages = sqsClient.receiveMessage(receiveRequest).messages();
 
-        for (Message message : messages) {
-            log.info("Mensagem recebida por CEPWorker: {}", message.body());
-            message.getValueForField("Body", String.class)
-                    .ifPresent(body -> {
-                        ObjectMapper mapper = new ObjectMapper();
-                        try {
-                            SnsTopicMessage m = mapper.readValue(body, SnsTopicMessage.class);
-                            ContratacaoMessage contratacaoMessage = mapper.readValue(m.Message(), ContratacaoMessage.class);
-                            process(contratacaoMessage);
-                        } catch (JsonProcessingException e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
+                    for (Message message : messages) {
+                        log.info("Mensagem recebida por CEPWorker: {}", message.body());
+                        message.getValueForField("Body", String.class)
+                                .ifPresent(body -> {
+                                    ObjectMapper mapper = new ObjectMapper();
+                                    try {
+                                        SnsTopicMessage m = mapper.readValue(body, SnsTopicMessage.class);
+                                        ContratacaoMessage contratacaoMessage = mapper.readValue(m.Message(), ContratacaoMessage.class);
+                                        process(contratacaoMessage);
+                                    } catch (JsonProcessingException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                });
 
-            deleteMessage(message.receiptHandle());
-        }
+                        deleteMessage(message.receiptHandle());
+                    }
+                });
     }
 
     @Override
@@ -62,7 +68,7 @@ public class ConsultaCepWorker implements Worker<ContratacaoMessage> {
 
         ViaCepResponse response = viaCepService.consultar(message.cep());
 
-       cepRepository.findById(message.cep()).ifPresent(
+        cepRepository.findById(message.cep()).ifPresent(
                 cep -> {
                     cep.update(
                             response.logradouro(),
@@ -77,7 +83,7 @@ public class ConsultaCepWorker implements Worker<ContratacaoMessage> {
                     );
                     cepRepository.save(cep);
                 }
-       );
+        );
     }
 
     private void deleteMessage(String receiptHandle) {

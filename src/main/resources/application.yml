@@ -2,8 +2,8 @@ spring:
   datasource:
     driver-class-name: org.h2.Driver
     username: sa
-    url: jdbc:h2:mem:testdb
     password: ''
+    url: jdbc:h2:mem:testdb
   h2:
     console:
       enabled: 'true'
@@ -19,7 +19,9 @@ management:
   endpoints:
     web:
       exposure:
-        include: 'health,metrics,httpexchanges,scheduledtasks'
+        include: 'health,metrics,httpexchanges,scheduledtasks,prometheus'
+      discovery:
+        enabled: true
   endpoint:
     health:
       show-details: always
