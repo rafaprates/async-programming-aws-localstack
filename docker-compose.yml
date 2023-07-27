@@ -13,7 +13,7 @@ services:
       - AWS_ACCESS_KEY_ID="FAKE"
       - AWS_DEFAULT_REGION=us-east-1
     volumes:
-      - "./config/aws-init.sh:/etc/localstack/init/ready.d/aws-init.sh"
+      - "./docker/config/aws-init.sh:/etc/localstack/init/ready.d/aws-init.sh"
 
   redis:
     container_name: "redis"
@@ -27,5 +27,12 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - "./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro"
+      - "./docker/config/prometheus.yml:/etc/prometheus/prometheus.yml:ro"
 
+  grafana:
+    container_name: "grafana"
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+        - "./docker/data/grafana:/var/lib/grafana"
