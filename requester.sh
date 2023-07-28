@@ -26,6 +26,7 @@ process_data() {
   item=$1
   # Generate a random sleep time between 5 and 30 seconds
   sleep_time=$((RANDOM % 26 + 5))
+#  sleep_time=1
 
   # Process the data (replace this with your desired operation)
   echo "Processing data: $item"
