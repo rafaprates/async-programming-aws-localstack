@@ -2,6 +2,7 @@ package com.example.localstack.controller;
 
 import com.example.localstack.controller.request.ContratacaoRequest;
 import com.example.localstack.service.ContratacaoService;
+import io.micrometer.core.annotation.Timed;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ public class ContratacaoController {
 
     private final ContratacaoService contratacaoService;
 
+    @Timed(value = "contratacao.calls", extraTags = {"url", "/api/v1/contratacoes"})
     @PostMapping("/api/v1/contratacoes")
     public ResponseEntity<Void> contratar(@Valid @RequestBody ContratacaoRequest input) {
         contratacaoService.processarRequisicao(input);

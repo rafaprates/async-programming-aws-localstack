@@ -6,6 +6,7 @@ import com.example.localstack.event.dto.ContratacaoMessage;
 import com.example.localstack.event.dto.SnsTopicMessage;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.core.instrument.MeterRegistry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,16 +28,18 @@ public class ConsultaCpfWorker implements Worker<ContratacaoMessage> {
     private String queueUrl;
     private final SqsClient sqsClient;
     private final CPFRepository cpfRepository;
+    private final MeterRegistry meter;
 
     @Scheduled(fixedDelay = 5000)
     public void listen() {
+        meter.counter("workers.cpf", "job", "listen").increment();
         ReceiveMessageRequest receiveRequest = ReceiveMessageRequest.builder()
                 .queueUrl(queueUrl)
                 .build();
         List<Message> messages = sqsClient.receiveMessage(receiveRequest).messages();
 
         for (Message message : messages) {
-            log.info("Mensagem recebida por CPFWorker: {}", message.body());
+            log.info("[CPF Worker] [Mensagem: {}] Recebida", message.body());
             message.getValueForField("Body", String.class)
                     .ifPresent(body -> {
                         ObjectMapper mapper = new ObjectMapper();
@@ -55,7 +58,8 @@ public class ConsultaCpfWorker implements Worker<ContratacaoMessage> {
 
     @Override
     public void process(ContratacaoMessage message) {
-        log.info("Processar CPF {}", message.cpf());
+        meter.counter("workers.cpf", "job", "process").increment();
+        log.info("[CPF: {}] Processando", message.cpf());
         cpfRepository.save(new CPF(message.cpf()));
     }
 
